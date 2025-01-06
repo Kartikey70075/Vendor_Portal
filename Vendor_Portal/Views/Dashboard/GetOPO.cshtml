@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewBag.Title = "GetOPO";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="GetOPO" ng-init="GetOPOInit()">
+    <table class="table table-bordered bg-white table-striped" style=" width: 95%; margin:2%;">
+        <thead class="thead-light">
+            <tr>
+                <th style="text-align:center">Sr No</th>
+                <th style="text-align:center">PO Number</th>
+                <th style="text-align:center">Item Code</th>
+                <th style="text-align:center">Item Name</th>
+                <th style="text-align:center">Whs Code</th>
+                <th style="text-align:center">Open Qty</th>
+                <th style="text-align:center">Balance Qty</th>
+                <th style="text-align:center">PODate</th>
+            </tr>
+            <tr>
+                <td style="text-align:center">
+                    <input type="text" ng-model="DocNum" placeholder="Search..." class="form-control">
+                </td>
+                <td style="text-align:center">
+                    <input type="text" ng-model="ItemCode" placeholder="Search..." class="form-control">
+                </td>
+                <td style="text-align:center">
+                    <input type="text" ng-model="Dscription" placeholder="Search..." class="form-control">
+                </td>
+                <td style="text-align:center">
+                    <input type="text" ng-model="WhsCode" placeholder="Search..." class="form-control">
+                </td>
+                <td style="text-align:center">
+                    <input type="text" ng-model="Quantity" placeholder="Search..." class="form-control">
+                </td>
+                <td style="text-align:center">
+                    <input type="text" ng-model="OpenQty" placeholder="Search..." class="form-control" ">
+                </td>
+                <td style="text-align:center">
+                    <input type="text" ng-model="DocDate" placeholder="Search..." class="form-control">
+                </td>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in OpenPO | filter: {DocNum: DocNum, ItemCode: ItemCode, Dscription: Dscription, WhsCode: WhsCode, Quantity: Quantity, OpenQty: OpenQty, DocDate: DocDate}">
+                <!-- PO Number -->
+                <td style="text-align:center">
+                    {{$index+1}}
+                </td>
+                 <!-- PO Number -->
+                <td style="text-align:center">
+                    {{x.DocNum}}
+                </td>
+
+                <!-- Item Code -->
+                <td style="text-align:center">
+                    {{x.ItemCode}}
+                </td>
+
+                <!-- Item Description -->
+                <td style="text-align:center">
+                    {{x.Dscription}}
+                </td>
+
+                <!-- Warehouse Code -->
+                <td style="text-align:center">
+                    {{x.WhsCode}}
+                </td>
+
+                <!-- Quantity -->
+                <td style="text-align:center">
+                    {{x.Quantity}}
+                </td>
+
+                <!-- Balance Quantity -->
+                <td style="text-align:center">
+                    {{x.OpenQty}}
+                </td>
+
+                <!-- PO Date -->
+                <td style="text-align:center">
+                    {{x.DocDate}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+

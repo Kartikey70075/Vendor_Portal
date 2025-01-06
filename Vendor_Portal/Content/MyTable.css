@@ -1,0 +1,99 @@
+﻿
+/* General Table Styling */
+.table-wrapper {
+    width: 95%;
+    margin: 2% auto;
+    overflow-x: auto;
+    height: 30%;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+.thead-light th {
+    background-color: #f8f9fa;
+    text-align: center;
+    font-weight: bold;
+    color: #495057;
+}
+
+.table td, .table th {
+    padding: 10px;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+}
+
+/* Table Hover Effects */
+tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Filter Section */
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+    .filter-container input,
+    .filter-container select {
+        width: 150px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+/* Modal Style (for clicked row) */
+.modal-content {
+    border-radius: 10px;
+}
+
+/* Input & Select elements */
+.form-control {
+    border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table-wrapper {
+        width: 100%;
+        margin: 1%;
+    }
+
+    .filter-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+        .filter-container input,
+        .filter-container select {
+            width: 100%;
+        }
+
+    .table-title h3 {
+        font-size: 24px; /* Adjust the font size */
+        color: #0097a7; /* Set the color */
+        font-weight: bold; /* Make the text bold */
+        margin-bottom: 20px; /* Add some space below the title */
+    }
+
+    .table-wrapper {
+        margin-top: 20px; /* Space the wrapper from the top */
+    }
+}
+

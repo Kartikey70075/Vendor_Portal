@@ -1,0 +1,240 @@
+﻿
+@{
+    ViewBag.Title = "Vendor_Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="AllVendorDTL" ng-init="AllVendorInit()">
+    <link href="~/Content/MyTable.css" rel="stylesheet" />
+    <div class="table-wrapper">
+        <!-- Filter Section -->
+        <div class="table-title text-center">
+            <h3 style="font-size: 24px; color: #0097a7; font-weight: bold;">
+                Open Purchase Orders List
+            </h3>
+        </div>
+        <!-- Table Wrapper with Overflow and Height -->
+        <div style="overflow-y: scroll;height: 600px;">
+            <table class="table table-bordered bg-white table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <select ng-init="DocStatus='O'" ng-model="DocStatus" class="form-control" style="width: auto;">
+                                <option value="O">Open</option>
+                                <option value="C">Closed</option>
+                                <option value="">All</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-init="WddStatus=''" ng-model="WddStatus" class="form-control" style="width: auto;">
+                                <option value="p">Approved</option>
+                                <option value="">All</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <input type="text" ng-model="DocNum" placeholder="Search PO Number" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="DocDate" placeholder="Search PO Date" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="DocDueDate" placeholder="Search Due Date" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="CardCode" placeholder="Search Card Code" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="CardName" placeholder="Search Card Name" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="Address" placeholder="Search Address" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="DocCur" placeholder="Search Currency" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="DocRate" placeholder="Search Exchange Rate" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-model="DocTotal" placeholder="Search Total" class="form-control">
+                        </td>
+                    </tr>
+                    <tr style="background-color:#87abcb;">
+                        <th>Click</th>
+                        <th>Sr. No</th>
+                        <th>Status</th>
+                        <th>Admin Status</th>
+                        <th>PO Number</th>
+                        <th>PO Date</th>
+                        <th>Due Date</th>
+                        <th>Card Code</th>
+                        <th>Card Name</th>
+                        <th>Address</th>
+                        <th>Currency</th>
+                        <th>Exchange Rate</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in AllVendor | filter: {DocStatus: DocStatus,WddStatus:WddStatus, DocNum: DocNum, DocDate: DocDate, DocDueDate: DocDueDate, CardCode: CardCode, CardName: CardName, Address: Address, DocCur: DocCur, DocRate: DocRate, DocTotal: DocTotal}" ng-click="VendorRowDtl(x)" data-toggle="modal" data-target="#exampleModal">
+                        <td class="text-center">
+                            <p><span style="color: green;font-size: 30px;">&#8680;</span></p>
+                        </td>
+                        <td class="text-center">{{$index + 1}}</td>
+                        <td class="text-center">{{x.DocStatus}}</td>
+                        <td class="text-center" ng-style="{'color': x.U_QCStatus !== 'P' ? 'green' : 'red'}">
+                            {{x.WddStatus == 'P' ? 'APPROVED' : x.WddStatus}}
+                        </td>
+                        <td class="text-center">{{x.DocNum}}</td>
+                        <td class="text-center">{{x.DocDate}}</td>
+                        <td class="text-center">{{x.DocDueDate}}</td>
+                        <td class="text-center">{{x.CardCode}}</td>
+                        <td class="text-center">{{x.CardName}}</td>
+                        <td class="text-center">{{x.Address}}</td>
+                        <td class="text-center">{{x.DocCur}}</td>
+                        <td class="text-center">{{x.DocRate}}</td>
+                        <td class="text-center">{{x.DocTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Vendor Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered bg-white table-striped" style="width: 95%; margin: 2%;">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="text-align:center">Serial No</th>
+                                <th style="text-align:center">PO Number</th>
+                                <th style="text-align:center">QC Status</th>
+                                @*<th style="text-align:center">Doc Entry</th>
+                                    <th style="text-align:center">Line Number</th>*@
+                                <th style="text-align:center">PO Date</th>
+                                @*<th style="text-align:center">Item Code</th>*@
+                                <th style="text-align:center">Item Name</th>
+                                @*<th style="text-align:center">Warehouse Code</th>*@
+                                <th style="text-align:center">Open Qty</th>
+                                <th style="text-align:center">Balance Qty</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="text-align:center">
+                                    <input type="text" ng-model="PONumber" placeholder="Search..." class="form-control">
+                                </td>
+                                <td style="text-align:center">
+                                    <input type="text" ng-model="U_QCStatus" placeholder="Search..." class="form-control">
+                                </td>
+
+                                @*<td style="text-align:center">
+                                        <input type="text" ng-model="DocEntry" placeholder="Search..." class="form-control">
+                                    </td>
+                                    <td style="text-align:center">
+                                        <input type="text" ng-model="LineNumber" placeholder="Search..." class="form-control">
+                                    </td>*@
+                                <td style="text-align:center">
+                                    <input type="text" ng-model="PODate" placeholder="Search..." class="form-control">
+                                </td>
+                                @*<td style="text-align:center">
+                                        <input type="text" ng-model="ItemCode" placeholder="Search..." class="form-control">
+                                    </td>*@
+                                <td style="text-align:center">
+                                    <input type="text" ng-model="ItemName" placeholder="Search..." class="form-control">
+                                </td>
+                                @*<td style="text-align:center">
+                                        <input type="text" ng-model="WarehouseCode" placeholder="Search..." class="form-control">
+                                    </td>*@
+                                <td style="text-align:center">
+                                    <input type="text" ng-model="Quantity" placeholder="Search..." class="form-control">
+                                </td>
+                                <td style="text-align:center">
+                                    <input type="text" ng-model="BalanceQty" placeholder="Search..." class="form-control">
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="x in AllVendorRow | filter: {PONumber: PONumber,U_QCStatus:U_QCStatus, DocEntry: DocEntry, LineNumber: LineNumber, PODate: PODate, ItemCode: ItemCode, ItemName: ItemName, WarehouseCode: WarehouseCode, Quantity: Quantity, BalanceQty: BalanceQty}" ng-click="VendorRowDtl(x)" data-toggle="modal" data-target="#exampleModal">
+
+                                <td style="text-align:center">
+                                    {{$index+1}}
+                                </td>
+
+                                <td style="text-align:center">
+                                    {{x.PONumber}}
+                                </td>
+                                <td style="text-align:center" ng-style="{'color': x.U_QCStatus !== '0' ? 'green' : 'red'}">
+                                    {{x.U_QCStatus == '1' ? 'APPROVED' : (x.U_QCStatus == '0' ? 'PENDING' : '')}}
+                                </td>
+
+
+                                <!--<td style="text-align:center">
+                                    {{x.DocEntry}}
+                                </td>-->
+                                <!--<td style="text-align:center">
+                                    {{x.LineNumber}}
+                                </td>-->
+
+                                <td style="text-align:center">
+                                    {{x.PODate}}
+                                </td>
+
+                                <!-- Item Code -->
+                                <!--<td style="text-align:center">
+                                    {{x.ItemCode}}
+                                </td>-->
+                                <!-- Item Name -->
+                                <td style="text-align:center">
+                                    t-
+
+                                    {{x.ItemName}}
+                                </td>
+
+
+
+                                <!-- Warehouse Code -->
+                                <!--<td style="text-align:center">
+                                    {{x.WarehouseCode}}
+                                </td>-->
+                                <!-- Quantity -->
+                                <td style="text-align:center">
+                                    {{x.Quantity}}
+                                </td>
+
+                                <!-- Balance Qty -->
+                                <td style="text-align:center">
+                                    {{x.BalanceQty}}
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+<style>
+    .green-arrow {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 10px solid green;
+    }
+</style>

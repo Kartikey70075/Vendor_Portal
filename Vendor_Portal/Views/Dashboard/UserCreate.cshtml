@@ -1,0 +1,624 @@
+﻿
+@{
+    ViewBag.Title = "UserCreate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Creation Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 93%;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 28px;
+            box-shadow: 38 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+        }
+
+            .form-header h2 {
+                margin: 0;
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+            .form-row label {
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .form-row input, .form-row select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+        .item-group {
+            margin-bottom: 20px;
+        }
+
+            .item-group label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .item-group input[type="checkbox"] {
+                margin-right: 10px;
+            }
+
+        .submit-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .submit-button button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+                .submit-button button:hover {
+                    background-color: #45a049;
+                }
+
+        .check-all {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .form-header {
+            padding: 10px;
+        }
+
+        .submit-button button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .submit-button button:hover {
+                background-color: #0056b3;
+            }
+
+        /* Container for the entire checkbox section */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Adjust space between items */
+        }
+
+        /* Individual checkbox item */
+        .checkbox-item {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Styling for the custom checkbox */
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding-left: 30px; /* Space for the custom checkbox */
+        }
+
+            /* Hide the default checkbox input */
+            .custom-checkbox input {
+                opacity: 0;
+                position: absolute;
+                left: 0;
+            }
+
+        /* Custom checkbox checkmark */
+        .checkbox-checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #007bff; /* Blue border */
+            border-radius: 4px;
+            background-color: white;
+            margin-right: 10px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Change checkmark appearance when checked */
+        .custom-checkbox input:checked + .checkbox-checkmark {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            /* Adding a check mark when the checkbox is checked */
+            .custom-checkbox input:checked + .checkbox-checkmark::after {
+                content: '\2713'; /* Unicode check mark */
+                color: white;
+                position: absolute;
+                left: 4px;
+                top: 2px;
+                font-size: 14px;
+            }
+
+        /* Hover effect for better user experience */
+        .custom-checkbox:hover .checkbox-checkmark {
+            border-color: #0056b3;
+        }
+
+        /* Styling the label */
+        .checkbox-label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" ng-controller="UserCreate" ng-init="UserCreateInit()">
+        <div>
+            <div style="margin-bottom:10px">
+                <div class="row d-flex justify-content-between align-items-center">
+                    <!-- Left side: Heading -->
+                    <div class="col-auto">
+                        <h2>User Creation</h2>
+                    </div>
+                    <!-- Right side: Buttons -->
+                    <div class="col-auto d-flex">
+                        @*<div class="submit-button mr-2">
+                            <button type="button" ng-click="Find()" id="Abc" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Find</button>
+                        </div>*@
+                        <div class="submit-button">
+                            <button type="button" ng-click="CreateUser()">{{btnName}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="text-center" style="background-color: #0097a7">
+                            </h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-bordered bg-white">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="text-align:center">Serial No</th>
+                                        <th style="text-align:center">User Type</th>
+                                        <th style="text-align:center">User Name</th>
+                                        <th style="text-align:center">User ID</th>
+                                        @*<th style="text-align:center">Branch Name</th>*@
+                                        <th style="text-align:center">Department</th>
+                                        <th style="text-align:center">Is Active</th>
+                                        <th style="text-align:center">Assign Head</th>
+                                        <th style="text-align:center">Assign Head Name</th>
+                                        <th style="text-align:center"></th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td style="text-align:center">
+                                            <input type="text" ng-model="UserType" placeholder="Search..." class="form-control">
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input type="text" ng-model="UserName" placeholder="Search..." class="form-control">
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input type="text" ng-model="UserID" placeholder="Search..." class="form-control">
+                                        </td>
+                                        @*<td style="text-align:center">
+                                                <input type="text" ng-model="BranchName" placeholder="Search..." class="form-control">
+                                            </td>*@
+                                        <td style="text-align:center">
+                                            <input type="text" ng-model="Department" placeholder="Search..." class="form-control">
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input type="text" ng-model="IsActive" placeholder="Search..." class="form-control">
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input type="text" ng-model="AssignHead" placeholder="Search..." class="form-control">
+                                        </td>
+                                        <td style="text-align:center">
+                                            <input type="text" ng-model="AssignHeadName" placeholder="Search..." class="form-control">
+                                        </td>
+                                        <td style="text-align:center"></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="x in Aluser | filter: {U_userType: UserType, U_userName: UserName, U_userID: UserID, U_BranchName: BranchName, U_department: Department, U_isActive: IsActive, U_assignHead: AssignHead, U_assignHeadName: AssignHeadName}" ng-click="Edit(x)" data-toggle="modal" data-target="#editModal">
+                                        <!-- Serial Number -->
+                                        <td style="text-align:center">
+                                            {{$index+1}}
+                                        </td>
+
+                                        <!-- User Type -->
+                                        <td style="text-align:center">
+                                            {{x.U_userType}}
+                                        </td>
+
+                                        <!-- User Name -->
+                                        <td style="text-align:center">
+                                            {{x.U_userName}}
+                                        </td>
+
+                                        <!-- User ID -->
+                                        <td style="text-align:center">
+                                            {{x.U_userID}}
+                                        </td>
+
+                                        <!-- Branch Name -->
+                                        @*<td style="text-align:center">
+                                                {{x.U_BranchName}}
+                                            </td>*@
+
+                                        <!-- Department -->
+                                        <td style="text-align:center">
+                                            {{x.U_department}}
+                                        </td>
+
+                                        <!-- Is Active -->
+                                        <td style="text-align:center">
+                                            {{x.U_isActive}}
+                                        </td>
+
+                                        <!-- Assign Head -->
+                                        <td style="text-align:center">
+                                            {{x.U_assignHead}}
+                                        </td>
+
+                                        <!-- Assign Head Name -->
+                                        <td style="text-align:center">
+                                            {{x.U_assignHeadName}}
+                                        </td>
+
+                                        <!-- Action Button -->
+                                        <td class="text-center">
+                                            <button data-dismiss="modal" aria-label="Close" ng-click="Edit(x)">Edit</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Header Part -->
+            <div class="form-row">
+                <div>
+                    <label>User Type</label>
+                    <select ng-model="User.U_userType" ng-change="GetVendor()" required ng-disabled="UserDiss" class="form-control" style="border-inline:3px solid red">
+                        <option value="">--Select--</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Employee">Employee</option>
+                        <option value="Vendor">Vendor</option>
+                    </select>
+                </div>
+
+                <div ng-show="OnlyName">
+                    <label>User Name</label>
+                    <input type="text" ng-model="User.U_userName" placeholder="Enter Name.." autocomplete="off" class="form-control" style="border-inline:3px solid red">
+                </div>
+
+                <div ng-show="NameAll">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>User Code</label>
+                            <input type="text" ng-model="User.U_userID" class="form-control" disabled />
+                        </div>
+                        <div class="col-6">
+                            <label>User Name</label>
+                            <input type="text" ng-model="User.U_userName" class="form-control" autocomplete="off" style="border-inline:3px solid red">
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-show="EmpName">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Employee Code</label>
+                            <div ng-show="EmpFields" angucomplete-alt id="EmpAngu" placeholder="Select Employee.." pause="100" ng-model="User.U_userID"
+                                 selected-object="AfterSelectedSOBP4" local-data="Emp" search-fields="EmpID,EmpName" input-class="form-control"
+                                 title-field="EmpID" description-field="EmpName" minlength="1" match-class="highlight" style="border-inline:3px solid red">
+                            </div>
+                            <input ng-hide="EmpFields" type="text" ng-model="User.U_userID" class="form-control" disabled />
+                        </div>
+                        <div class="col-6">
+                            <label>Employee Name</label>
+                            <input type="text" ng-model="User.U_userName" class="form-control" autocomplete="off" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-show="NameVendor">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Vendor code</label>
+                            <div>
+                                <div ng-show="EmpFields" angucomplete-alt id="VendorAngu" placeholder="Select Vendor.." pause="100" ng-model="User.U_userID"
+                                     selected-object="AfterSelectedSOBP" local-data="Vendor" search-fields="CardCode,CardName" input-class="form-control"
+                                     title-field="CardCode" description-field="CardName" minlength="1" match-class="highlight" style="border-inline:3px solid red">
+                                </div>
+                                <input ng-hide="EmpFields" type="text" ng-model="User.U_userID" class="form-control" disabled />
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+                            <label>Vendor Name</label>
+                            <input type="text" placeholder="Vendor Name.." ng-model="User.U_userName" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter Password.." ng-model="User.U_password" autocomplete="off" class="form-control" style="border-inline: 3px solid red">
+                    <span ng-if="User.U_password && User.U_password.length < 4" style="color: red;">
+                        Your password should be more than 4 characters.
+                    </span>
+                </div>
+
+                <div>
+                    <label>Confirm Password</label>
+                    <input type="password" placeholder="Confirm Password.." ng-model="User.U_confirmPassword" class="form-control"
+                           ng-style="{'border': User.U_password !== User.U_confirmPassword ? '1px solid red' : ''}">
+                </div>
+
+                <div>
+                    <label>Branch</label>
+                    <select ng-model="User.U_BranchID" class="form-control">
+                        <option value="" selected>--Select--</option>
+                        <option ng-repeat="x in branch" value="{{x.BPLId}}">{{x.BPLName}}</option>
+                    </select>
+                </div>
+
+                <div ng-show="OtherDepShow">
+                    <label>Department</label>
+                    <select ng-model="User.U_departmentID" class="form-control">
+                        <option value="">--Select--</option>
+                        <option ng-repeat="x in Dep" value="{{x.Code}}">{{x.Name}}</option>
+                    </select>
+                </div>
+                <div ng-show="VendorDepShow">
+                    <label>Department</label>
+                    <div>
+                        <table class="table">
+                            <thead style="background-color: #87abcb;">
+                                <tr>
+                                    <th class="text-center">S.No.</th>
+                                    <th class="text-center">Department Name</th>
+                                    <th class="text-center">Department Code</th>
+                                    <th class="text-center">Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center">
+                                        <input type="checkbox" id="checkAll" name="checkAll">
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="x in Dep">
+                                    <td class="text-center">{{$index + 1}}</td>
+                                    <td class="text-center">{{x.Name}}</td>
+                                    <td class="text-center">{{x.Code}}</td>
+                                    <td class="text-center">
+                                        <input type="checkbox" ng-model="x.selected" id="item{{$index}}" name="itemGroup[]">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Is Active</label>
+                    <select ng-model="User.U_isActive" class="form-control" style="border-inline:3px solid red">
+                        <option value="">--Select--</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div ng-hide="BlockStatusHide">
+                    <label>Is Locked</label>
+                    <select ng-model="User.U_Wrong_Attempts" ng-style="{'border-color': User.U_Wrong_Attempts ==='3' ? 'red' : ''}">
+                        <option value="3">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>First reporting head</label>
+                            <div angucomplete-alt
+                                 id="HeadAngu"
+                                 placeholder="First reporting head.."
+                                 pause="100"
+                                 ng-model="User.U_assignHead"
+                                 selected-object="AfterSelectedSOBP2"
+                                 local-data="Head"
+                                 search-fields="U_userID,U_userName"
+                                 input-class="form-control"
+                                 title-field="U_userID"
+                                 description-field="U_userName"
+                                 minlength="1"
+                                 match-class="highlight"
+                                 style="border-inline:3px solid red">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label>First reporting head Name</label>
+                            <input type="text" ng-model="User.U_assignHeadName" class="form-control" placeholder="First reporting head Name.." disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Second reporting head</label>
+                            <div angucomplete-alt
+                                 id="HeadAngu2"
+                                 placeholder="Second reporting head.."
+                                 pause="100"
+                                 ng-model="User.U_assignHead2"
+                                 selected-object="AfterSelectedSOBP3"
+                                 local-data="FilteredHeadsForSecond"
+                                 search-fields="U_userID,U_userName"
+                                 input-class="form-control"
+                                 title-field="U_userID"
+                                 description-field="U_userName"
+                                 minlength="1"
+                                 match-class="highlight">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label>Second reporting head Name</label>
+                            <input type="text" ng-model="User.U_AssignHeadName2" placeholder="Second reporting head Name.." class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div ng-hide="hideItemGrp">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead style="background-color: #87abcb;">
+                        <tr>
+                            <th class="text-center">S.No.</th>
+                            <th class="text-center">Item Group Name</th>
+                            <th class="text-center">Item Group Code</th>
+                            <th class="text-center">Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center">
+                                <input type="checkbox" id="checkAll" name="checkAll">
+                            </td>
+                        </tr>
+                        <tr ng-repeat="x in Itmgrp">
+                            <td class="text-center">{{$index + 1}}</td>
+                            <td class="text-center">{{x.ItmsGrpNam}}</td>
+                            <td class="text-center">{{x.ItmsGrpCod}}</td>
+                            <td class="text-center">
+                                <input type="checkbox" ng-model="x.selected" id="item{{$index}}" name="itemGroup[]">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="submit-button">
+                    <button type="button" ng-click="CreateUser()">{{btnName}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    // JavaScript to make the "Check All" checkbox functional
+    document.getElementById('checkAll').addEventListener('change', function () {
+        var checkboxes = document.querySelectorAll('.item-group input[type="checkbox"]:not(#checkAll)');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = this.checked;
+            // Update the ng-model for AngularJS
+            checkbox.dispatchEvent(new Event('change'));
+        }, this);
+    });
+</script>
+<style>
+    .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    /* Center the modal */
+    #myModal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 9999; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        /* margin: 15% auto;*/
+        padding: 20px;
+        border: 1px solid #888;
+        width: 100%;
+        /* height: 65%;*/
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+

@@ -1,0 +1,423 @@
+﻿
+@{
+    ViewBag.Title = "ListOfUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="UserCreate" ng-init="ListofuserInit()">
+
+    <link href="~/Content/MyTable.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <div class="table-wrapper">
+        <!-- Filter Section -->
+        <div class="table-title text-center">
+            <h3 style="font-size: 24px; color: #0097a7; font-weight: bold;">
+                Created User List
+            </h3>
+        </div>
+        <!-- Table Wrapper with Overflow and Height -->
+        <div style="overflow-y: scroll;height: 600px;">
+            <table class="table table-bordered bg-white">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="text-align:center">Serial No</th>
+                        <th style="text-align:center">User Type</th>
+                        <th style="text-align:center">Is Active</th>
+                        <th style="text-align:center">User Name</th>
+                        <th style="text-align:center">User ID</th>
+                        @*<th style="text-align:center">Branch Name</th>*@
+                        <th style="text-align:center">Department</th>
+                        <th style="text-align:center">Assign Head</th>
+                        <th style="text-align:center">Assign Head Name</th>
+                        <th style="text-align:center"></th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align:center">
+                            <select ng-init="UserType=''" ng-model="UserType" class="form-control">
+                                <option value="">All</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Employee">Employee</option>
+                                <option value="Vendor">Vendor</option>
+                            </select>
+                        </td>
+                        <td style="text-align:center">
+                            <select ng-init="IsActive=''" ng-model="IsActive" class="form-control">
+                                <option value="">All</option>
+                                <option value="Yes">Active</option>
+                                <option value="No">Inactive</option>
+                            </select>
+                        </td>
+                        <td style="text-align:center">
+                            <input type="text" ng-model="UserName" placeholder="Search..." class="form-control">
+                        </td>
+                        <td style="text-align:center">
+                            <input type="text" ng-model="UserID" placeholder="Search..." class="form-control">
+                        </td>
+                        @*<td style="text-align:center">
+                                <input type="text" ng-model="BranchName" placeholder="Search..." class="form-control">
+                            </td>*@
+                        <td style="text-align:center">
+                            <select ng-model="Department" class="form-control">
+                                <option value="">All</option>
+                                <option ng-repeat="x in Dep" value="{{x.Name}}">{{x.Name}}</option>
+                            </select>
+                        </td>
+                        <td style="text-align:center">
+                            <input type="text" ng-model="AssignHead" placeholder="Search..." class="form-control">
+                        </td>
+                        <td style="text-align:center">
+                            <input type="text" ng-model="AssignHeadName" placeholder="Search..." class="form-control">
+                        </td>
+                        <td style="text-align:center"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in Aluser | filter: {U_userType: UserType, U_userName: UserName, U_userID: UserID, U_BranchName: BranchName, U_department: Department, U_isActive: IsActive, U_assignHead: AssignHead, U_assignHeadName: AssignHeadName}" ng-click="Edit(x)" data-toggle="modal" data-target="#editModal">
+                        <!-- Serial Number -->
+                        <td style="text-align:center">
+                            {{$index+1}}
+                        </td>
+
+                        <!-- User Type -->
+                        <td style="text-align:center">
+                            {{x.U_userType}}
+                        </td>
+                        <!-- Is Active -->
+                        <td style="text-align:center">
+                            {{x.U_isActive}}
+                        </td>
+                        <!-- User Name -->
+                        <td style="text-align:center">
+                            {{x.U_userName}}
+                        </td>
+
+                        <!-- User ID -->
+                        <td style="text-align:center">
+                            {{x.U_userID}}
+                        </td>
+
+                        <!-- Branch Name -->
+                        @*<td style="text-align:center">
+                                {{x.U_BranchName}}
+                            </td>*@
+
+                        <!-- Department -->
+                        <td style="text-align:center">
+                            {{x.U_department}}
+                        </td>
+
+                        <!-- Assign Head -->
+                        <td style="text-align:center">
+                            {{x.U_assignHead}}
+                        </td>
+
+                        <!-- Assign Head Name -->
+                        <td style="text-align:center">
+                            {{x.U_assignHeadName}}
+                        </td>
+
+                        <!-- Action Button -->
+                        <td class="text-center">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" @*aria-label="Close"*@ data-toggle="modal" data-target="#exampleModal" style="width: 80px; height: 50px;" ng-click="Edit(x)">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <!-- User Creation Section -->
+                        <div class="mb-3">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-auto">
+                                    <h2>User Details</h2>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <div class="submit-button">
+                                        <button type="button" ng-click="CreateUser()" style=" width: 100px; height: 90%;" class="btn btn-primary">{{btnName}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Form Fields Section -->
+                        <form>
+                            <!-- User Type Selection -->
+                            <div class="form-group">
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="userType"><strong>User Type</strong></label>
+                                        <select ng-model="User.U_userType" ng-change="GetVendor()" required ng-disabled="UserDiss" class="form-control" id="userType">
+                                            <option value="">--Select--</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="Manager">Manager</option>
+                                            <option value="Employee">Employee</option>
+                                            <option value="Vendor">Vendor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <!-- Conditional Name Input -->
+                                        <div ng-show="OnlyName" class="form-group">
+                                            <label for="userName"><strong>User Name</strong></label>
+                                            <input type="text" ng-model="User.U_userName" id="userName" placeholder="Enter Name.." autocomplete="off" class="form-control">
+                                        </div>
+
+                                        <!-- Conditional Name and User Code -->
+                                        <div ng-show="NameAll" class="form-row">
+                                            <div class="col-md-6">
+                                                <label for="userCode"><strong>User Code</strong></label>
+                                                <input type="text" ng-model="User.U_userID" id="userCode" class="form-control" disabled />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="userName"><strong>User Name</strong></label>
+                                                <input type="text" ng-model="User.U_userName" id="userName" class="form-control" autocomplete="off">
+                                            </div>
+                                        </div>
+
+                                        <!-- Conditional Employee Code and Name -->
+                                        <div ng-show="EmpName" class="form-row">
+                                            <div class="col-md-6">
+                                                <label for="employeeCode"><strong>Employee Code</strong></label>
+                                                <div ng-show="Abc" angucomplete-alt id="EmpAngu" placeholder="Select Employee.." pause="100" ng-model="User.U_userID" selected-object="AfterSelectedSOBP4" local-data="Emp" search-fields="EmpID,EmpName" input-class="form-control" title-field="EmpID" description-field="EmpName" minlength="1" match-class="highlight"></div>
+                                                <input ng-hide="Abc" type="text" ng-model="User.U_userID" id="employeeCode" class="form-control" disabled />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="employeeName"><strong>Employee Name</strong></label>
+                                                <input type="text" ng-model="User.U_userName" id="employeeName" class="form-control" autocomplete="off" disabled>
+                                            </div>
+                                        </div>
+
+                                        <!-- Conditional Vendor Code and Name -->
+                                        <div ng-show="NameVendor" class="form-row">
+                                            <div class="col-md-6">
+                                                <label for="vendorCode"><strong>Vendor Code</strong></label>
+                                                <div ng-show="Abc" angucomplete-alt id="VendorAngu" placeholder="Select Vendor.." pause="100" ng-model="User.U_userID" selected-object="AfterSelectedSOBP" local-data="Vendor" search-fields="CardCode,CardName" input-class="form-control" title-field="CardCode" description-field="CardName" minlength="1" match-class="highlight"></div>
+                                                <input ng-hide="Abc" type="text" ng-model="User.U_userID" id="vendorCode" class="form-control" disabled />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="vendorName"><strong>Vendor Name</strong></label>
+                                                <input type="text" ng-model="User.U_userName" id="vendorName" placeholder="Vendor Name.." class="form-control" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+
+                            <!-- Password and Confirm Password -->
+                            <div class="form-group">
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="password"><strong>Password</strong></label>
+                                        <input type="password" ng-model="User.U_password" id="password" placeholder="Enter Password.." autocomplete="off" class="form-control">
+                                        <span ng-if="User.U_password && User.U_password.length < 4" style="color: red;">Your password should be more than 4 characters.</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="confirmPassword"><strong>Confirm Password</strong></label>
+                                        <input type="password" ng-model="User.U_confirmPassword" id="confirmPassword" class="form-control" ng-style="{'border': User.U_password !== User.U_confirmPassword ? '1px solid red' : ''}">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Branch Selection -->
+                            <div class="form-group">
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="branch"><strong>Branch</strong></label>
+                                        <select ng-model="User.U_BranchID" id="branch" class="form-control">
+                                            <option value="" selected>--Select--</option>
+                                            <option ng-repeat="x in branch" value="{{x.BPLId}}">{{x.BPLName}}</option>
+                                        </select>
+                                        <!-- Active Status -->
+                                        <div class="form-group">
+                                            <label for="isActive"><strong>Is Active</strong></label>
+                                            <select ng-model="User.U_isActive" id="isActive" class="form-control">
+                                                <option value="">--Select--</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <!-- Department Selection -->
+                                        <div ng-hide="hideItemGrp" class="form-group">
+                                            <label for="department"><strong>Department</strong></label>
+                                            <select ng-model="User.U_departmentID" id="department" class="form-control">
+                                                <option value="">--Select--</option>
+                                                <option ng-repeat="x in Dep" value="{{x.Code}}">{{x.Name}}</option>
+                                            </select>
+                                        </div>
+                                        <div ng-show="hideItemGrp">
+                                            <label for="department"><strong>Department</strong></label>
+                                            <div class="checkbox-group">
+                                                <div ng-repeat="x in Dep" class="checkbox-item">
+                                                    <P>
+                                                        <input type="checkbox" ng-model="x.selected" id="item{{$index}}" name="itemGroup[]" @*ng-model="User.U_departmentID" ng-value="x.Code"*@>
+                                                        {{x.Name}}
+                                                    </P>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Locked Status -->
+                            <div ng-hide="BlockStatusHide" class="form-group">
+                                <label for="isLocked"><strong>Is Locked</strong></label>
+                                <select ng-model="User.U_Wrong_Attempts" id="isLocked" ng-style="{'border-color': User.U_Wrong_Attempts ==='3' ? 'red' : ''}" class="form-control">
+                                    <option value="3">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+
+                            <!-- Reporting Heads -->
+                            <div class="form-row">
+                                <div class="col-md-6 form-group">
+                                    <label for="firstReportingHead"><strong>First Reporting Head</strong></label>
+                                    <div angucomplete-alt id="HeadAngu" placeholder="First reporting head.." pause="100" ng-model="User.U_assignHead" selected-object="AfterSelectedSOBP2" local-data="Head" search-fields="U_userID,U_userName" input-class="form-control" title-field="U_userID" description-field="U_userName" minlength="1" match-class="highlight"></div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="firstReportingHeadName"><strong>First Reporting Head Name</strong></label>
+                                    <input type="text" ng-model="User.U_assignHeadName" id="firstReportingHeadName" class="form-control" placeholder="First reporting head Name.." disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-md-6 form-group">
+                                    <label for="secondReportingHead"><strong>Second Reporting Head</strong></label>
+                                    <div angucomplete-alt id="HeadAngu2" placeholder="Second reporting head.." pause="100" ng-model="User.U_assignHead2" selected-object="AfterSelectedSOBP3" local-data="FilteredHeadsForSecond" search-fields="U_userID,U_userName" input-class="form-control" title-field="U_userID" description-field="U_userName" minlength="1" match-class="highlight"></div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="secondReportingHeadName"><strong>Second Reporting Head Name</strong></label>
+                                    <input type="text" ng-model="User.U_AssignHeadName2" id="secondReportingHeadName" placeholder="Second reporting head Name.." class="form-control" disabled>
+                                </div>
+                            </div>
+                            <!-- Item Group Table -->
+                            <div ng-hide="hideItemGrp">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead style="background-color: #87abcb;">
+                                            <tr>
+                                                <th class="text-center">S.No.</th>
+                                                <th class="text-center">Item Group Name</th>
+                                                <th class="text-center">Item Group Code</th>
+                                                <th class="text-center">Select</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center"></td>
+                                                <td class="text-center"></td>
+                                                <td class="text-center"></td>
+                                                <td class="text-center">
+                                                    <input type="checkbox" id="checkAll" name="checkAll">
+                                                </td>
+                                            </tr>
+                                            <tr ng-repeat="x in Itmgrp">
+                                                <td class="text-center">{{$index + 1}}</td>
+                                                <td class="text-center">{{x.ItmsGrpNam}}</td>
+                                                <td class="text-center">{{x.ItmsGrpCod}}</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox" ng-model="x.selected" id="item{{$index}}" name="itemGroup[]">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Submit Button -->
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <div class="submit-button">
+                                    <button type="button" ng-click="CreateUser()" style=" width: 100px; height: 90%;" class="btn btn-primary">{{btnName}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // JavaScript to make the "Check All" checkbox functional
+    document.getElementById('checkAll').addEventListener('change', function () {
+        var checkboxes = document.querySelectorAll('.item-group input[type="checkbox"]:not(#checkAll)');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = this.checked;
+            // Update the ng-model for AngularJS
+            checkbox.dispatchEvent(new Event('change'));
+        }, this);
+    });
+</script>
+<style>
+    .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    /* Center the modal */
+    #myModal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 9999; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        /* margin: 15% auto;*/
+        padding: 20px;
+        border: 1px solid #888;
+        width: 100%;
+        /* height: 65%;*/
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
